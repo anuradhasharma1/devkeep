@@ -1,0 +1,24 @@
+"use client";
+
+import Link from "next/link";
+
+
+export default function Navbar() {
+    return (
+        <nav  >
+            <div className="flex justify-between items-center px-8 py-6 border border-[#3e2f25]" >
+                <h1 className="font-semibold text-lg">DevKeep</h1>
+
+                <div className="flex gap-6 items-center text-sm">
+                    <Link href="#">Features</Link>
+                    <Link href="#">Contact</Link>
+                    <div> theme</div>
+
+                    <button className="border border-[#8b6f5a] px-4 py-1 rounded-lg hover:bg-[#8b6f5a] hover:text-white transition">
+                        Sign in
+                    </button>
+                </div>
+            </div>
+        </nav>
+    );
+}
