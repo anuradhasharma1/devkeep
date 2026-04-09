@@ -1,69 +1,62 @@
 import { connectDB } from "@/core/db";
 import Snippet from "@/models/snippets";
 
-// GET SINGLE SNIPPET
-export async function GET(req, { params }) {
-  try {
-    await connectDB();
+// CREATE SNIPPET
+export async function POST(req) {
+    try {
+        await connectDB();
 
-    const snippet = await Snippet.findById(params.id);
+        const body = await req.json();
 
-    if (!snippet) {
-      return Response.json(
-        { success: false, message: "Snippet not found" },
-        { status: 404 }
-      );
+        const snippet = await Snippet.create({
+            title: body.title,
+            code: body.code,
+            tags: body.tags || [],
+            language: body.language || "javascript",
+            isPublic: body.isPublic ?? true,
+        });
+
+        return Response.json(
+            { success: true, snippet },
+            { status: 201 }
+        );
+    } catch (error) {
+        return Response.json(
+            { success: false, error: error.message },
+            { status: 500 }
+        );
     }
-
-    return Response.json({ success: true, snippet });
-  } catch (error) {
-    return Response.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
-  }
 }
 
-// UPDATE SNIPPET
-export async function PUT(req, { params }) {
-  try {
-    await connectDB();
+// GET ALL SNIPPETS +search
+export async function GET(req) {
+    try {
+        await connectDB();
 
-    const body = await req.json();
+        const { searchParams } = new URL(req.url);
+        const search = searchParams.get("search");
 
-    const updated = await Snippet.findByIdAndUpdate(
-      params.id,
-      {
-        title: body.title,
-        code: body.code,
-        tags: body.tags,
-        language: body.language,
-        isPublic: body.isPublic,
-      },
-      { new: true }
-    );
+        let query = {};
 
-    return Response.json({ success: true, snippet: updated });
-  } catch (error) {
-    return Response.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
-  }
-}
+        if (search) {
+            query = {
+                $or: [
+                    { title: { $regex: search, $options: "i" } },
+                    { tags: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
 
-// DELETE SNIPPET
-export async function DELETE(req, { params }) {
-  try {
-    await connectDB();
+        const snippets = await Snippet.find(query).sort({ createdAt: -1 });
 
-    await Snippet.findByIdAndDelete(params.id);
-
-    return Response.json({ success: true, message: "Deleted successfully" });
-  } catch (error) {
-    return Response.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
-  }
+        return Response.json({
+            success: true,
+            snippets,
+        });
+    } catch (error) {
+        return Response.json(
+            { success: false, error: error.message },
+            { status: 500 }
+        );
+    }
 }
