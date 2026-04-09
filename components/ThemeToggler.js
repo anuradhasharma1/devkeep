@@ -21,7 +21,7 @@ export default function ThemeToggle() {
     return (
         <button
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="w-10 h-10 flex items-center justify-center  backdrop-blur-md hover:scale-105 transition"
+            className="w-10 h-10 flex items-center justify-center  backdrop-blur-md hover:scale-105 transition cursor-pointer"
         >
             <AnimatePresence mode="wait">
                 {isDark ? (

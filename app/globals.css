@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+:root {
+  /* light */
+  --bg: #f5f1eb;
+  --text: #3e2f25;
+  --card: #ffffff;
+  --border: #e0d6cc;
+  --accent: #8b6f5a;
+}
+
+.dark {
+  /* dark*/
+  --bg: #1a1410;
+  --text: #f5f1eb;
+  --card: #2a211b;
+  --border: #3a2f28;
+  --accent: #c8a98d;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
 
 .nav-link {
   position: relative;
