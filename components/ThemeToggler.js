@@ -18,9 +18,32 @@ export default function ThemeToggle() {
     if (!mounted) return null;
     const isDark = theme === "dark";
 
+    const handleToggle = () => {
+        const nextTheme = isDark ? "light" : "dark";
+        const nextBg = nextTheme === "dark" ? "#1a1410" : "#f5f1eb";
+
+        const shutter = document.createElement("div");
+        shutter.style.background = nextBg;
+        shutter.className = "theme-shutter";
+        document.body.appendChild(shutter);
+
+        requestAnimationFrame(() => {
+            shutter.classList.add("active");
+        });
+
+        setTimeout(() => {
+            setTheme(nextTheme);
+        }, 300);
+
+        setTimeout(() => {
+            shutter.remove();
+        }, 900);
+    };
+
+
     return (
         <button
-            onClick={() => setTheme(isDark ? "light" : "dark")}
+            onClick={handleToggle}
             className="w-10 h-10 flex items-center justify-center  backdrop-blur-md hover:scale-105 transition cursor-pointer"
         >
             <AnimatePresence mode="wait">

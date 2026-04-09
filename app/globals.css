@@ -38,10 +38,28 @@ body {
   bottom: -2px;
   width: 0%;
   height: 2px;
-  background-color: #8b6f5a; /* brown accent */
+  background-color: #8b6f5a;
   transition: width 0.3s ease;
 }
 
 .nav-link:hover::after {
   width: 100%;
+}
+
+
+.theme-shutter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  z-index: 9999;
+
+  background: var(--bg);
+
+  transition: height 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.theme-shutter.active {
+  height: 100%;
 }
