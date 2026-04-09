@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ThemeToggle from "./ThemeToggler";
 
 
 export default function Navbar() {
@@ -12,7 +13,7 @@ export default function Navbar() {
                 <div className="flex gap-6 items-center text-sm">
                     <Link href="#">Features</Link>
                     <Link href="#">Contact</Link>
-                    <div> theme</div>
+                    <div> <ThemeToggle/></div>
 
                     <button className="border border-[#8b6f5a] px-4 py-1 rounded-lg hover:bg-[#8b6f5a] hover:text-white transition">
                         Sign in
