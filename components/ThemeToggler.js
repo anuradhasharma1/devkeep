@@ -31,7 +31,7 @@ export default function ThemeToggle() {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                        className="w-5 h-5 text-yellow-500"
+                        className="w-5 h-5 text-white"
                         initial={{ rotate: -90, scale: 0 }}
                         animate={{ rotate: 0, scale: 1 }}
                         exit={{ rotate: 90, scale: 0 }}
