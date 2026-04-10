@@ -12,3 +12,4 @@ export const LANGUAGES = [
   { label: "MongoDB", value: "mongodb", color: "#4db33d" },
   { label: "Prisma", value: "prisma", color: "#0c344b" },
 ];
+
