@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/UseAuth";
 import { useSnippets } from "@/hooks/UseSnippets";
-import { LANGUAGES, LANGUAGE_MAP } from "@/constants/languages";
+import { LANGUAGES } from "@/constants/languages";
 import { SUGGESTED_TAGS } from "@/constants/tags";
 
 const fadeUp = (delay = 0) => ({
@@ -148,7 +148,7 @@ function PreviewCard({ title, description, code, language, tags, isPublic }) {
                     {title || "untitled snippet"}
                 </span>
                 <span style={{ fontSize: ".58rem", letterSpacing: ".08em", padding: "3px 9px", borderRadius: 999, border: "1px solid var(--border)", color: "var(--accent)", textTransform: "uppercase" }}>
-                    {language || "—"}
+                   {language || "—"}
                 </span>
             </div>
 
@@ -270,22 +270,6 @@ export default function CreatePage() {
                 <circle cx="500" cy="350" r="200" fill="var(--accent)" fillOpacity=".06" stroke="var(--accent)" strokeWidth=".5"
                     style={{ strokeDasharray: 1260, strokeDashoffset: 1260, animation: "draw 3s 1s ease forwards" }} />
             </svg>
-
-            {/* ── Topbar ── */}
-            <nav style={{ position: "sticky", top: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "space-between", padding: ".9rem 1.75rem", borderBottom: "1px solid var(--border)", background: "var(--bg)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-                    <Link href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.05rem", fontWeight: 700, color: "var(--text)", textDecoration: "none" }}>
-                        Dev<span style={{ color: "var(--accent)" }}>Keep</span>
-                    </Link>
-                    <Link href="/dashboard" style={{ fontSize: ".7rem", letterSpacing: ".08em", color: "var(--accent)", opacity: .7, textDecoration: "none" }}>
-                        ← dashboard
-                    </Link>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: ".5rem", fontSize: ".65rem", color: "var(--accent)", opacity: .7 }}>
-                    {saved ? "saved ✓" : hasChanges ? "unsaved changes" : "unsaved"}
-                    <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: saved ? "#98c379" : hasChanges ? "#e5c07b" : "var(--border)" }} />
-                </div>
-            </nav>
 
             {/* ── Body ── */}
             <div style={{ position: "relative", zIndex: 1, maxWidth: 1100, margin: "0 auto", padding: "2rem 1.75rem", display: "grid", gridTemplateColumns: "1fr 340px", gap: "2rem", alignItems: "start" }}>
