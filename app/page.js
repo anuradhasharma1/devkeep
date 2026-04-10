@@ -27,7 +27,6 @@ function useCountUp(ref, target, duration = 1200, startDelay = 800) {
   }, [ref, target, duration, startDelay]);
 }
 
-
 export default function Home() {
   const s1 = useRef(null), s2 = useRef(null), s3 = useRef(null);
   useCountUp(s1, 128, 1200);
@@ -41,7 +40,7 @@ export default function Home() {
         {/* Animated grid background */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0"
           viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice"
-          style={{ opacity: 0.15 }}>
+          style={{ opacity: 0.25 }}>
           <style>{`
           .gl { stroke: var(--accent); stroke-width: 0.5; fill: none; }
           .gl-draw { stroke-dasharray: 1; stroke-dashoffset: 1;
