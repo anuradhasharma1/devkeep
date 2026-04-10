@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggler";
 import { useAuth } from "@/hooks/UseAuth";
 
+
 const fadeUp = (delay = 0) => ({
     initial: { opacity: 0, y: 24 },
     animate: { opacity: 1, y: 0 },
@@ -25,6 +26,25 @@ export default function Navbar() {
                     Dev<span style={{ color: "var(--accent)" }}>Keep</span>
                 </span>
             </Link>
+
+            {/* login page */}
+            <div className="flex items-center gap-3 ml-auto" >
+                {pathname === "/login" && (
+                    <Link
+                        href="/"
+                        className=" text-xs px-4 py-1.5 rounded tracking-widest transition-all hover:opacity-80"
+                        style={{
+                            color: "var(--accent)",
+                            opacity: 0.8,
+                            textDecoration: "none",
+                            border: "1px solid var(--border)",
+                        }}
+                    >
+                        ← back to home
+                    </Link>
+                )}
+            </div>
+
             {pathname === "/" && (
                 <div className="hidden md:flex gap-6 text-xs tracking-widest" style={{ color: "var(--accent)" }}>
                     <Link href="#features">features</Link>
