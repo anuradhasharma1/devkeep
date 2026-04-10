@@ -243,7 +243,7 @@ export default function Home() {
             </p>
             <Link href="/dashboard" className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90"
               style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "inherit" }}>
-              get started — it is free
+              get started for Free 
             </Link>
           </div>
         </section>
