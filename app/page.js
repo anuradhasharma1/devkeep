@@ -56,11 +56,12 @@ export default function Home() {
             ["line", { x1: 800, y1: 0, x2: 800, y2: 700, style: { animationDelay: ".85s" } }],
           ].map(([Tag, props], i) => <Tag key={i} className="gl gl-draw" {...props} />)}
           <circle className="gl" cx="500" cy="350" r="200"
-            style={{
+            style={{ fill: "var(--accent)", fillOpacity: 0.08,
               strokeDasharray: 1260, strokeDashoffset: 1260,
               animation: "draw 3s 1s ease forwards"
             }} />
           <circle className="gl" cx="500" cy="350" r="320" style={{
+            fill: "var(--accent)", fillOpacity: 0.04, opacity: .5,
             opacity: .5,
             strokeDasharray: 2010, strokeDashoffset: 2010,
             animation: "draw 3.5s 1.2s ease forwards"
@@ -166,6 +167,92 @@ export default function Home() {
               ))}
           </div>
         </div>
+
+        {/* ── FEATURES ── */}
+        <section id="features" className="py-20 px-8 max-w-4xl mx-auto">
+          <div className="mb-12">
+            <div className="flex items-center gap-2 text-xs tracking-widest mb-3" style={{ color: "var(--accent)" }}>
+              <span style={{ display: "inline-block", width: 24, height: 1, background: "var(--accent)" }} />
+              what you get
+            </div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3vw,2.4rem)", fontWeight: 700, lineHeight: 1.12 }}>
+              Everything a developer<br />actually needs.
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 overflow-hidden rounded-xl"
+            style={{ border: "1px solid var(--border)", gap: "1px", background: "var(--border)" }}>
+            {[
+              { n: "01", title: "Save snippets", desc: "Syntax highlighting across 20+ languages. Never lose useful code." },
+              { n: "02", title: "Instant search", desc: "Find anything by title, tag, or language in milliseconds." },
+              { n: "03", title: "Tag & organize", desc: "Tags like #auth, #api, #hooks. Filter your library in one click." },
+              { n: "04", title: "Share publicly", desc: "Clean public links for any snippet. Perfect for teams." },
+            ].map(({ n, title, desc }) => (
+              <div key={n} className="p-7 transition-colors" style={{ background: "var(--card)" }}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--bg)"}
+                onMouseLeave={e => e.currentTarget.style.background = "var(--card)"}>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "var(--border)", marginBottom: ".75rem" }}>{n}</div>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.05rem", marginBottom: ".5rem" }}>{title}</h3>
+                <p style={{ fontSize: ".7rem", lineHeight: 1.75, color: "var(--accent)", opacity: .85 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── HOW IT WORKS ── */}
+        <section id="how" className="py-20 px-8 max-w-4xl mx-auto" style={{ borderTop: "1px solid var(--border)" }}>
+          <div className="mb-12">
+            <div className="flex items-center gap-2 text-xs tracking-widest mb-3" style={{ color: "var(--accent)" }}>
+              <span style={{ display: "inline-block", width: 24, height: 1, background: "var(--accent)" }} />
+              how it works
+            </div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3vw,2.4rem)", fontWeight: 700, lineHeight: 1.12 }}>
+              Three steps to a<br />cleaner workflow.
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-10">
+            {[
+              { n: "01", title: "Paste your code", desc: "Drop in any snippet. Pick the language and add a title." },
+              { n: "02", title: "Tag it", desc: "Add up to 10 tags. Autocomplete keeps it fast." },
+              { n: "03", title: "Find it instantly", desc: "Search, filter by language or tag, copy in one click." },
+            ].map(({ n, title, desc }) => (
+              <div key={n} className="relative pl-12">
+                <div style={{ position: "absolute", left: 0, top: 0, fontFamily: "'Playfair Display', serif", fontSize: "2.5rem", fontWeight: 700, color: "var(--border)", lineHeight: 1 }}>{n}</div>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", marginBottom: ".5rem" }}>{title}</h3>
+                <p style={{ fontSize: ".7rem", lineHeight: 1.75, color: "var(--accent)", opacity: .85 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <section className="px-8 pb-20 max-w-4xl mx-auto">
+          <div className="relative overflow-hidden rounded-xl text-center py-16 px-8"
+            style={{ background: "var(--text)", color: "var(--bg)" }}>
+            <div className="absolute rounded-full" style={{ width: 220, height: 220, background: "var(--accent)", opacity: .12, top: -60, right: -50 }} />
+            <div className="absolute rounded-full" style={{ width: 130, height: 130, background: "var(--accent)", opacity: .10, bottom: -40, left: 30 }} />
+            <h2 className="relative" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 700, marginBottom: "1rem" }}>
+              Start saving your<br />
+              <em style={{ fontStyle: "italic", color: "#c8a98d" }}>best snippets</em> today.
+            </h2>
+            <p className="relative text-xs mx-auto mb-8" style={{ opacity: .7, lineHeight: 1.85, maxWidth: "40ch" }}>
+              Free to use. No credit card. Just a calmer way to manage your code.
+            </p>
+            <Link href="/dashboard" className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90"
+              style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "inherit" }}>
+              get started — it is free
+            </Link>
+          </div>
+        </section>
+
+        {/* ── FOOTER ── */}
+        <footer className="flex items-center justify-between px-8 py-6 text-xs tracking-widest"
+          style={{ borderTop: "1px solid var(--border)", color: "var(--accent)", opacity: .8 }}>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: ".9rem", opacity: 1, color: "var(--text)", fontWeight: 700 }}>
+            Dev<span style={{ color: "var(--accent)" }}>Keep</span>
+          </span>
+          <span>built with ❤️  and coffee </span>
+          <span>© 2026 Anuradha</span>
+        </footer>
 
         <style>{`
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
