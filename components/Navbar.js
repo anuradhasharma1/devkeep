@@ -29,7 +29,7 @@ export default function Navbar() {
             </div>
             <div className=" flex items-center gap-2">
                 <ThemeToggle />
-                <Link href="/dashboard"
+                <Link href="/login"
                     className="text-xs px-4 py-1.5 rounded tracking-widest transition-all hover:opacity-80"
                     style={{ border: "1px solid var(--accent)", color: "var(--accent)", fontFamily: "inherit" }}>
                     sign in
