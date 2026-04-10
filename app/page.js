@@ -3,6 +3,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Mail, } from "lucide-react";
+import ScrollToTop from "@/components/Button";
 
 
 
@@ -247,6 +248,7 @@ export default function Home() {
             </Link>
           </div>
         </section>
+        <ScrollToTop/>
 
         {/* ── FOOTER ── */}
         <footer
