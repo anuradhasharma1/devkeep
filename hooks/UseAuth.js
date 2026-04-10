@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const STORAGE_KEY = "devkeep_user";
 
 export function useAuth() {
+  const router = useRouter();
   const [user, setUser] = useState(() => {
     try {
       if (typeof window === "undefined") return null;
@@ -16,16 +18,18 @@ export function useAuth() {
     }
   });
 
-  const [loading, setLoading] = useState(false); // no async now
+  const [loading] = useState(false); 
 
   const login = (userData) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
     setUser(userData);
+    router.push("/dashboard");
   };
 
   const logout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setUser(null);
+    router.push("/login")
   };
 
   return {
