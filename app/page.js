@@ -1,12 +1,11 @@
 "use client"
 import Link from "next/link";
 import Image from "next/image";
+import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Mail, } from "lucide-react";
 import ScrollToTop from "@/components/Button";
-
-
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -39,6 +38,7 @@ export default function Home() {
   useCountUp(s3, 47, 1000);
   return (
     <>
+      <Navbar />
       <div className="relative min-h-screen flex flex-col overflow-hidden"
         style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "'IBM Plex Mono', monospace" }}>
 
@@ -245,11 +245,11 @@ export default function Home() {
             </p>
             <Link href="/dashboard" className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90"
               style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "inherit" }}>
-              get started for Free 
+              get started for Free
             </Link>
           </div>
         </section>
-        <ScrollToTop/>
+        <ScrollToTop />
 
         {/* ── FOOTER ── */}
         <footer
@@ -259,17 +259,17 @@ export default function Home() {
         >
           {/* Brand */}
           <div className=" flex gap-2">
-          <span
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: "1rem",
-              color: "var(--text)",
-              fontWeight: 700,
-            }}
-          >
-            Dev<span style={{ color: "var(--accent)" }}>Keep</span>
-          </span>
-           <Image src="/favicon.ico" alt="logo" width={10} height={10} className="w-5 h-5" />
+            <span
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: "1rem",
+                color: "var(--text)",
+                fontWeight: 700,
+              }}
+            >
+              Dev<span style={{ color: "var(--accent)" }}>Keep</span>
+            </span>
+            <Image src="/favicon.ico" alt="logo" width={10} height={10} className="w-5 h-5" />
           </div>
 
           {/* Icons */}
