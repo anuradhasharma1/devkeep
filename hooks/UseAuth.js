@@ -29,7 +29,7 @@ export function useAuth() {
   const logout = () => {
     localStorage.removeItem(STORAGE_KEY);
     setUser(null);
-    router.push("/login")
+    router.push("/")
   };
 
   return {

@@ -58,7 +58,7 @@ export default function Navbar() {
 
                         <button
                             onClick={logout}
-                            className="text-xs px-3 py-1.5 rounded tracking-widest"
+                            className="text-xs px-3 py-1.5 rounded tracking-widest cursor-pointer"
                             style={{
                                 border: "1px solid var(--border)",
                                 color: "var(--accent)",
@@ -100,7 +100,7 @@ export default function Navbar() {
 
                         <button
                             onClick={logout}
-                            className="text-xs px-3 py-1.5 rounded tracking-widest"
+                            className="text-xs px-3 py-1.5 rounded tracking-widest cursor-pointer"
                             style={{
                                 border: "1px solid var(--border)",
                                 color: "var(--accent)",
