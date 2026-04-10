@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Mail, } from "lucide-react";
 import ScrollToTop from "@/components/Button";
+import { useAuth } from "@/hooks/UseAuth";
+import { useRouter } from "next/navigation";
+
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -31,6 +34,18 @@ function useCountUp(ref, target, duration = 1200, startDelay = 800) {
 }
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  const goToDashboard = () => {
+    if (isAuthenticated) router.push("/dashboard");
+    else router.push("/login");
+  };
+
+  const goToCreate = () => {
+    if (isAuthenticated) router.push("/create");
+    else router.push("/login");
+  };
   const s1 = useRef(null), s2 = useRef(null), s3 = useRef(null);
   useCountUp(s1, 128, 1200);
   useCountUp(s2, 20, 900);
@@ -104,16 +119,16 @@ export default function Home() {
             </motion.p>
 
             <motion.div {...fadeUp(0.5)} className="flex gap-3 flex-wrap">
-              <Link href="/dashboard"
+              <button onClick={goToDashboard}
                 className="px-6 py-2.5 text-xs tracking-widest rounded-sm transition-all hover:opacity-80"
                 style={{ background: "var(--text)", color: "var(--bg)", fontFamily: "inherit" }}>
                 open dashboard
-              </Link>
-              <Link href="/create"
+              </button>
+              <button onClick={goToCreate}
                 className="px-6 py-2.5 text-xs tracking-widest rounded-sm transition-all"
                 style={{ border: "1px solid var(--border)", color: "var(--text)", fontFamily: "inherit" }}>
                 create snippet
-              </Link>
+              </button>
             </motion.div>
           </div>
 
@@ -241,10 +256,10 @@ export default function Home() {
             <p className="relative text-xs mx-auto mb-8" style={{ opacity: .7, lineHeight: 1.85, maxWidth: "40ch" }}>
               Free to use. No credit card. Just a calmer way to manage your code.
             </p>
-            <Link href="/dashboard" className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90"
+            <button onClick={goToDashboard} className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90"
               style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "inherit" }}>
               get started for Free
-            </Link>
+            </button>
           </div>
         </section>
         <ScrollToTop />
