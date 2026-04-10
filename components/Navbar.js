@@ -1,25 +1,39 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import ThemeToggle from "./ThemeToggler";
+
+const fadeUp = (delay = 0) => ({
+    initial: { opacity: 0, y: 24 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, delay, ease: "easeOut" },
+});
+
 
 
 export default function Navbar() {
     return (
-        <nav  >
-            <div className="flex justify-between items-center px-8 py-6 border border-[#3e2f25]" >
-                <h1 className="font-semibold text-lg">DevKeep</h1>
-
-                <div className="flex gap-6 items-center text-sm">
-                    <Link href="/features" className="nav-link">Features</Link>
-                    <Link href="/contact" className="nav-link">Contact</Link>
-                    <div> <ThemeToggle /></div>
-
-                    <button className="border border-[#8b6f5a] px-4 py-1 rounded-lg hover:bg-[#8b6f5a] hover:text-white transition">
-                        Sign in
-                    </button>
-                </div>
+        <motion.nav {...fadeUp(0.05)}
+            className="relative z-10 flex items-center justify-between px-8 py-5"
+            style={{ borderBottom: "1px solid var(--border)" }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700 }}>
+                Dev<span style={{ color: "var(--accent)" }}>Keep</span>
+            </span>
+            <div className="hidden md:flex gap-6 text-xs tracking-widest" style={{ color: "var(--accent)" }}>
+                <Link href="#">features</Link>
+                <Link href="#">How it works</Link>
+                <Link href="#">contact</Link>
             </div>
-        </nav>
+            <div className=" flex items-center gap-2">
+                <ThemeToggle/>
+                <Link href="/dashboard"
+                    className="text-xs px-4 py-1.5 rounded tracking-widest transition-all hover:opacity-80"
+                    style={{ border: "1px solid var(--accent)", color: "var(--accent)", fontFamily: "inherit" }}>
+                    sign in
+                </Link>
+            </div>
+
+        </motion.nav>
     );
 }
