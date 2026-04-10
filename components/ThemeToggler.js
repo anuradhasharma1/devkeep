@@ -8,6 +8,12 @@ export default function ThemeToggle() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
+    const playClick = () => {
+        const audio = new Audio("/sounds/click.mp3");
+        audio.volume = 0.4; 
+        audio.play();
+    };
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setMounted(true);
@@ -19,6 +25,7 @@ export default function ThemeToggle() {
     const isDark = theme === "dark";
 
     const handleToggle = () => {
+        playClick();
         const nextTheme = isDark ? "light" : "dark";
         const nextBg = nextTheme === "dark" ? "#1a1410" : "#f5f1eb";
 
