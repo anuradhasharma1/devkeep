@@ -47,9 +47,17 @@ export default function Navbar() {
 
             {pathname === "/" && (
                 <div className="hidden md:flex gap-6 text-xs tracking-widest" style={{ color: "var(--accent)" }}>
-                    <Link href="#features">features</Link>
-                    <Link href="#how">How it works</Link>
-                    <Link href="#contact">contact</Link>
+                    {["features", "How it works", "contact"].map((item, i) => (
+                        <Link
+                            key={i}
+                            href={`#${item.toLowerCase().replace(/\s+/g, "")}`}
+                            className="relative group"
+                        >
+                            {item}
+
+                            <span className="absolute left-0 -bottom-1 h-px w-0 bg-(--accent) transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
+                    ))}
                 </div>
             )}
             <div className=" flex items-center gap-2">

@@ -218,7 +218,7 @@ export default function Home() {
         </section>
 
         {/* ── HOW IT WORKS ── */}
-        <section id="how" className="py-20 px-8 max-w-4xl mx-auto" style={{ borderTop: "1px solid var(--border)" }}>
+        <section id="howitworks" className="py-20 px-8 max-w-4xl mx-auto" style={{ borderTop: "1px solid var(--border)" }}>
           <div className="mb-12">
             <div className="flex items-center gap-2 text-xs tracking-widest mb-3" style={{ color: "var(--accent)" }}>
               <span style={{ display: "inline-block", width: 24, height: 1, background: "var(--accent)" }} />
