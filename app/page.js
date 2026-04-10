@@ -2,6 +2,9 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { Mail, } from "lucide-react";
+
+
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -56,7 +59,8 @@ export default function Home() {
             ["line", { x1: 800, y1: 0, x2: 800, y2: 700, style: { animationDelay: ".85s" } }],
           ].map(([Tag, props], i) => <Tag key={i} className="gl gl-draw" {...props} />)}
           <circle className="gl" cx="500" cy="350" r="200"
-            style={{ fill: "var(--accent)", fillOpacity: 0.08,
+            style={{
+              fill: "var(--accent)", fillOpacity: 0.08,
               strokeDasharray: 1260, strokeDashoffset: 1260,
               animation: "draw 3s 1s ease forwards"
             }} />
@@ -173,7 +177,7 @@ export default function Home() {
           <div className="mb-12">
             <div className="flex items-center gap-2 text-xs tracking-widest mb-3" style={{ color: "var(--accent)" }}>
               <span style={{ display: "inline-block", width: 24, height: 1, background: "var(--accent)" }} />
-              what you get
+              Features
             </div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3vw,2.4rem)", fontWeight: 700, lineHeight: 1.12 }}>
               Everything a developer<br />actually needs.
@@ -245,13 +249,61 @@ export default function Home() {
         </section>
 
         {/* ── FOOTER ── */}
-        <footer className="flex items-center justify-between px-8 py-6 text-xs tracking-widest"
-          style={{ borderTop: "1px solid var(--border)", color: "var(--accent)", opacity: .8 }}>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: ".9rem", opacity: 1, color: "var(--text)", fontWeight: 700 }}>
+        <footer
+          id="contact"
+          className="flex flex-col items-center justify-center gap-4 px-8 py-10 text-xs tracking-widest text-center"
+          style={{ borderTop: "1px solid var(--border)", color: "var(--accent)" }}
+        >
+          {/* Brand */}
+          <span
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "1rem",
+              color: "var(--text)",
+              fontWeight: 700,
+            }}
+          >
             Dev<span style={{ color: "var(--accent)" }}>Keep</span>
           </span>
-          <span>built with ❤️  and coffee </span>
-          <span>© 2026 Anuradha</span>
+
+          {/* Icons */}
+          <div className="flex items-center gap-5">
+            <a href="mailto:anuradhasharma71440@gmail.com" className="hover:scale-110 transition">
+              <Mail size={18} />
+            </a>
+            <a href="https://www.linkedin.com/in/anuradha-sharmaa1/" target="_blank" className="hover:scale-110 transition">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 
+  1.12 1 2.48 1s2.5 1.12 2.5 2.5zM.5 8h3.96V24H.5V8zm7.5 
+  0h3.8v2.16h.05c.53-1 1.82-2.16 3.75-2.16 
+  4.01 0 4.75 2.64 4.75 6.07V24h-3.96v-7.1c0-1.7-.03-3.88-2.36-3.88 
+  -2.36 0-2.72 1.84-2.72 3.76V24H8V8z" />
+              </svg>
+            </a>
+            <a href=" https://github.com/anuradhasharma1" target="_blank" className="hover:scale-110 transition">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.54 2.87 8.39 6.84 9.75.5.09.66-.22.66-.49 
+  0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 
+  1 .07 1.53 1.06 1.53 1.06.9 1.56 2.36 1.11 2.94.85.09-.66.35-1.11.64-1.37-2.22-.26-4.55-1.14-4.55-5.07 
+  0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0112 6.8c.85.004 
+  1.7.12 2.5.35 1.9-1.32 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.64 1.03 2.76 
+  0 3.94-2.34 4.8-4.57 5.06.36.32.67.95.67 1.92 
+  0 1.39-.01 2.5-.01 2.84 0 .27.16.59.67.49A10.27 10.27 0 0022 12.26C22 6.58 17.52 2 12 2z" />
+              </svg>
+            </a>
+          </div>
+          <span className="opacity-70">built with ❤️ and coffee</span>
+          <span className="opacity-60">© 2026 Anuradha</span>
         </footer>
 
         <style>{`

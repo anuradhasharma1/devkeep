@@ -21,9 +21,9 @@ export default function Navbar() {
                 Dev<span style={{ color: "var(--accent)" }}>Keep</span>
             </span>
             <div className="hidden md:flex gap-6 text-xs tracking-widest" style={{ color: "var(--accent)" }}>
-                <Link href="#">features</Link>
-                <Link href="#">How it works</Link>
-                <Link href="#">contact</Link>
+                <Link href="#features">features</Link>
+                <Link href="#how">How it works</Link>
+                <Link href="#contact">contact</Link>
             </div>
             <div className=" flex items-center gap-2">
                 <ThemeToggle/>

@@ -26,6 +26,10 @@ body {
     color 0.3s ease;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .nav-link {
   position: relative;
   display: inline-block;
