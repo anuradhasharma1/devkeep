@@ -1,5 +1,6 @@
 "use client"
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Mail, } from "lucide-react";
@@ -257,6 +258,7 @@ export default function Home() {
           style={{ borderTop: "1px solid var(--border)", color: "var(--accent)" }}
         >
           {/* Brand */}
+          <div className=" flex gap-2">
           <span
             style={{
               fontFamily: "'Playfair Display', serif",
@@ -267,6 +269,8 @@ export default function Home() {
           >
             Dev<span style={{ color: "var(--accent)" }}>Keep</span>
           </span>
+           <Image src="/favicon.ico" alt="logo" width={10} height={10} className="w-5 h-5" />
+          </div>
 
           {/* Icons */}
           <div className="flex items-center gap-5">
