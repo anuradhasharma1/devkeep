@@ -210,27 +210,6 @@ export default function Dashboard() {
                 <circle cx="500" cy="350" r="320" fill="var(--accent)" fillOpacity=".03" stroke="var(--accent)" strokeWidth=".5" style={{ strokeDasharray: 2010, strokeDashoffset: 2010, animation: "draw 3.5s 1.2s ease forwards", opacity: .5 }} />
             </svg>
 
-            {/* ── Topbar ── */}
-            <nav style={{ position: "sticky", top: 0, zIndex: 50, display: "flex", alignItems: "center", justifyContent: "space-between", padding: ".9rem 1.75rem", borderBottom: "1px solid var(--border)", background: "var(--bg)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-                    <Link href="/" style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.05rem", fontWeight: 700, color: "var(--text)", textDecoration: "none" }}>
-                        Dev<span style={{ color: "var(--accent)" }}>Keep</span>
-                    </Link>
-                    <Link href="/" style={{ fontSize: ".7rem", letterSpacing: ".08em", color: "var(--accent)", opacity: .7, textDecoration: "none" }}>← home</Link>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
-                    <Link href="/create"
-                        style={{ background: "var(--text)", color: "var(--bg)", border: "none", padding: "7px 16px", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".7rem", letterSpacing: ".08em", cursor: "pointer", borderRadius: 3, textDecoration: "none" }}>
-                        + new snippet
-                    </Link>
-                    <button onClick={logout} style={{ fontSize: ".7rem", padding: "6px 14px", border: "1px solid var(--border)", borderRadius: 3, background: "transparent", color: "var(--accent)", fontFamily: "inherit", cursor: "pointer", letterSpacing: ".06em" }}>
-                        sign out
-                    </button>
-                    <div style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: ".65rem", color: "var(--bg)", fontWeight: 500 }}>
-                        {user?.name?.slice(0, 2).toUpperCase() || "AS"}
-                    </div>
-                </div>
-            </nav>
 
             {/* ── Body ── */}
             <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "220px 1fr" }}>

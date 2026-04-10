@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/Navbar";
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/UseAuth";
 import { useRouter } from "next/navigation";
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <Navbar />
+      
       <div
         style={{
           minHeight: "100vh",

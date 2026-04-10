@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Mail, } from "lucide-react";
@@ -38,7 +37,6 @@ export default function Home() {
   useCountUp(s3, 47, 1000);
   return (
     <>
-      <Navbar />
       <div className="relative min-h-screen flex flex-col overflow-hidden"
         style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "'IBM Plex Mono', monospace" }}>
 
