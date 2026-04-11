@@ -34,15 +34,17 @@ function useCountUp(ref, target, duration = 1200, startDelay = 800) {
 }
 
 export default function Home() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated,loading } = useAuth();
   const router = useRouter();
 
   const goToDashboard = () => {
+    if (loading) return;
     if (isAuthenticated) router.push("/dashboard");
     else router.push("/login");
   };
 
   const goToCreate = () => {
+    if (loading) return;
     if (isAuthenticated) router.push("/create");
     else router.push("/login");
   };
@@ -81,7 +83,6 @@ export default function Home() {
             }} />
           <circle className="gl" cx="500" cy="350" r="320" style={{
             fill: "var(--accent)", fillOpacity: 0.04, opacity: .5,
-            opacity: .5,
             strokeDasharray: 2010, strokeDashoffset: 2010,
             animation: "draw 3.5s 1.2s ease forwards"
           }} />

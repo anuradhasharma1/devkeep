@@ -7,11 +7,16 @@ const SnippetSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    
+
     author: {
       type: String,
       ref: "User",
-      required: false,  
+      required: false,
+    },
+    description: {
+      type: String,
+      default: "",
+      maxlength: 500,
     },
     code: {
       type: String,
