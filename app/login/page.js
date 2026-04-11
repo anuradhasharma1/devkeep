@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/UseAuth";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,8 @@ const fadeUp = (delay = 0) => ({
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, isAuthenticated } = useAuth();
+  const { status } = useSession();
+
 
   const [mode, setMode] = useState("login");         // "login" | "register"
   const [name, setName] = useState("");
@@ -24,10 +25,10 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // Already logged in → go to dashboard
+  // Already logged in → redirect 
   useEffect(() => {
-    if (isAuthenticated) router.push("/dashboard");
-  }, [isAuthenticated, router]);
+    if (status === "authenticated") router.push("/dashboard");
+  }, [status, router]);
 
   const validate = () => {
     const e = {};
@@ -44,34 +45,48 @@ export default function LoginPage() {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
+    setErrors({});
+
     try {
-      const endpoint = mode === "login" ? "login" : "register";
-      const body = mode === "login"
-        ? { action: "login", email, password }
-        : { action: "register", name, email, password };
-
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setErrors({ submit: data.error || "Something went wrong" });
-        setLoading(false);
-        return;
+      if (mode === "register") {
+        // 1. Create account via register API
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setErrors({ submit: data.error });
+          setLoading(false);
+          return;
+        }
+        // 2. Auto sign in after register
       }
 
-      // Save token + user, redirect to dashboard
-      localStorage.setItem("devflow_token", data.token);
-      login(data.user);                               // sets user + redirects
+      // Sign in with NextAuth credentials
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setErrors({ submit: result.error });
+        setLoading(false);
+      } else {
+        router.push("/dashboard");
+      }
     } catch {
       setErrors({ submit: "Network error. Please try again." });
       setLoading(false);
     }
   };
+
+  const handleGoogle = () => {
+    signIn("google", { callbackUrl: "/dashboard" });
+  };
+
 
   const inputStyle = (field) => ({
     width: "100%",
@@ -86,6 +101,12 @@ export default function LoginPage() {
     transition: "border-color .2s",
     letterSpacing: ".03em",
   });
+
+  if (status === "loading") return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg)", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".8rem", color: "var(--accent)" }}>
+      loading...
+    </div>
+  );
 
   return (
     <div style={{
@@ -114,7 +135,6 @@ export default function LoginPage() {
           style={{ strokeDasharray: 1, strokeDashoffset: 1, animation: "draw 2s 2s ease forwards" }} />
       </svg>
 
-    
 
       {/* Centered form */}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem", position: "relative", zIndex: 1 }}>
@@ -138,6 +158,35 @@ export default function LoginPage() {
 
           {/* Card */}
           <motion.div {...fadeUp(0.1)} style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, padding: "2rem", }}>
+
+            {/* Google button */}
+            <button onClick={handleGoogle} disabled={loading}
+              style={{
+                width: "100%", padding: ".75rem", marginBottom: "1.25rem",
+                background: "var(--bg)", border: "1px solid var(--border)",
+                borderRadius: 6, cursor: "pointer", display: "flex",
+                alignItems: "center", justifyContent: "center", gap: ".65rem",
+                fontFamily: "'IBM Plex Mono', monospace", fontSize: ".72rem",
+                color: "var(--text)", letterSpacing: ".06em", transition: "border-color .2s",
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = "var(--accent)"}
+              onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border)"}>
+              {/* Google G icon */}
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+              </svg>
+              continue with google
+            </button>
+
+            {/* Divider */}
+            <div style={{ display: "flex", alignItems: "center", gap: ".75rem", marginBottom: "1.25rem" }}>
+              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+              <span style={{ fontSize: ".6rem", color: "var(--accent)", opacity: .6, letterSpacing: ".1em" }}>or</span>
+              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+            </div>
 
             {/* Mode tabs */}
             <div style={{ display: "flex", gap: "1px", background: "var(--border)", borderRadius: 6, overflow: "hidden", marginBottom: "1.75rem" }}>
@@ -218,12 +267,6 @@ export default function LoginPage() {
               </button>
             </form>
 
-            {/* Divider */}
-            <div style={{ display: "flex", alignItems: "center", gap: ".75rem", margin: "1.5rem 0" }}>
-              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-              <span style={{ fontSize: ".6rem", color: "var(--accent)", opacity: .6, letterSpacing: ".1em" }}>or</span>
-              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-            </div>
 
             {/* Switch mode */}
             <p style={{ textAlign: "center", fontSize: ".68rem", color: "var(--accent)", opacity: .75 }}>
