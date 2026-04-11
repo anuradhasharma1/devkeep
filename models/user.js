@@ -4,21 +4,27 @@ const UserSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true,
+            required: [true, "Name is required"],
+            trim: true,
         },
         email: {
             type: String,
-            required: true,
+            required: [true, "Email is required"],
             unique: true,
+            lowercase: true,
+            trim: true,
         },
         password: {
             type: String,
             required: true,
+            default: null,  //null for google users
+        },
+        avatar: {
+            type: String,
+            default: "",
         },
     },
     { timestamps: true }
 )
-const User =
-    mongoose.models.User || mongoose.model("User", UserSchema);
 
-export default User;
+export default mongoose.models.User || mongoose.model("User", UserSchema);
