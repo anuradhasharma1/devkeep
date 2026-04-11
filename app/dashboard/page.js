@@ -156,6 +156,7 @@ export default function Dashboard() {
     const [view, setView] = useState("grid"); // grid | list
     const [toast, setToast] = useState(false);
     const [sidebarFilter, setSidebarFilter] = useState("all");
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     //auth guard
     useEffect(() => {
@@ -169,8 +170,11 @@ export default function Dashboard() {
             setLoading(true);
             setFetchError(null);
             try {
-                const res = await fetch("/api/snippets");
+                const res = await fetch("/api/snippets", {
+                    credentials: "include",  // ← sends session cookie
+                });
                 const data = await res.json();
+                console.log("Snippets response:", data);
                 if (!res.ok) throw new Error(data.error || "Failed to fetch");
                 setSnippets(data.snippets || []);
             } catch (err) {
@@ -198,11 +202,17 @@ export default function Dashboard() {
     const handleDelete = async (id) => {
         if (!confirm("Delete this snippet?")) return;
         try {
-            const res = await fetch(`/api/snippets/${id}`, { method: "DELETE" });
-            if (!res.ok) throw new Error("Delete failed");
+            const res = await fetch(`/api/snippets/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+            if (!res.ok) {
+                const d = await res.json();
+                throw new Error(d.error || "Delete failed");
+            }
             setSnippets(prev => prev.filter(s => s._id !== id));
         } catch (err) {
-            alert("Could not delete snippet. Try again.");
+            alert(err.message || "Could not delete snippet.");
         }
     };
 
@@ -231,9 +241,6 @@ export default function Dashboard() {
             return 0;
         });
 
-
-
-
     const eyebrow = (label) => (
         <div style={{ display: "flex", alignItems: "center", gap: ".6rem", fontSize: ".6rem", letterSpacing: ".18em", color: "var(--accent)", marginBottom: ".4rem" }}>
             <span style={{ display: "inline-block", width: 20, height: 1, background: "var(--accent)" }} />
@@ -242,7 +249,7 @@ export default function Dashboard() {
     );
 
     const sidebarBtn = (label, key, onClick) => (
-        <button key={key} onClick={onClick}
+        <button key={key} onClick={() => { onClick(); setSidebarOpen(false); }}
             style={{
                 display: "flex", alignItems: "center", gap: ".6rem", padding: ".55rem .75rem",
                 borderRadius: 4, fontSize: ".72rem", color: sidebarFilter === key ? "var(--bg)" : "var(--accent)",
@@ -255,11 +262,59 @@ export default function Dashboard() {
         </button>
     );
 
+    const SidebarContent = () => (
+        <>
+            {eyebrow("library")}
+            {sidebarBtn("all snippets", "all", () => { setSidebarFilter("all"); setPublicFilter("all"); setLangFilter(""); setTagFilter(""); })}
+            {sidebarBtn("public", "public", () => { setSidebarFilter("public"); setPublicFilter("public"); setLangFilter(""); setTagFilter(""); })}
+            {sidebarBtn("private", "private", () => { setSidebarFilter("private"); setPublicFilter("private"); setLangFilter(""); setTagFilter(""); })}
+
+            <div style={{ height: 1, background: "var(--border)", margin: ".75rem 0" }} />
+            {eyebrow("languages")}
+            {LANGUAGES.slice(0, 6).map(l =>
+                sidebarBtn(l.label.toLowerCase(), `lang-${l.value}`, () => {
+                    setSidebarFilter(`lang-${l.value}`); setLangFilter(l.value); setPublicFilter("all"); setTagFilter("");
+                })
+            )}
+
+            <div style={{ height: 1, background: "var(--border)", margin: ".75rem 0" }} />
+            {eyebrow("tags")}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+                {SUGGESTED_TAGS.slice(0, 8).map(t => (
+                    <button key={t}
+                        onClick={() => { const next = tagFilter === t ? "" : t; setTagFilter(next); setSidebarFilter(next ? `tag-${t}` : "all"); setSidebarOpen(false); }}
+                        style={{
+                            fontSize: ".6rem", padding: "3px 10px", borderRadius: 999, cursor: "pointer",
+                            fontFamily: "'IBM Plex Mono', monospace", transition: "all .15s", margin: 2,
+                            background: tagFilter === t ? "var(--accent)" : "transparent",
+                            color: tagFilter === t ? "var(--bg)" : "var(--accent)",
+                            border: `1px solid ${tagFilter === t ? "var(--accent)" : "var(--border)"}`,
+                        }}>
+                        #{t}
+                    </button>
+                ))}
+            </div>
+
+            <div style={{ marginTop: "auto", paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
+                <div style={{ fontSize: ".65rem", color: "var(--accent)", opacity: .7, marginBottom: ".5rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {session.user?.email}
+                </div>
+                <button onClick={handleLogout}
+                    style={{ width: "100%", padding: ".5rem .75rem", background: "transparent", border: "1px solid var(--border)", borderRadius: 4, cursor: "pointer", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".7rem", color: "var(--accent)", letterSpacing: ".06em", transition: "all .15s", textAlign: "left" }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = "var(--accent)"}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border)"}>
+                    sign out
+                </button>
+            </div>
+        </>
+    );
+
+
     return (
         <div style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "'IBM Plex Mono', monospace", minHeight: "100vh", position: "relative" }}>
 
             {/* Grid bg */}
-            <svg style={{ position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0, opacity: .12 }}
+            <svg style={{ position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0, opacity: .1 }}
                 viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice">
                 <style>{`.gl{stroke:var(--accent);stroke-width:.5;fill:none;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.5s ease forwards}@keyframes draw{to{stroke-dashoffset:0}}`}</style>
                 {[[0, 175, 1000, 175, .1], [0, 350, 1000, 350, .25], [0, 525, 1000, 525, .4], [200, 0, 200, 700, .55], [500, 0, 500, 700, .7], [800, 0, 800, 700, .85]]
@@ -270,94 +325,84 @@ export default function Dashboard() {
                     style={{ strokeDasharray: 2010, strokeDashoffset: 2010, animation: "draw 3.5s 1.2s ease forwards", opacity: .5 }} />
             </svg>
 
+            {/* Mobile overlay */}
+            {sidebarOpen && (
+                <div onClick={() => setSidebarOpen(false)}
+                    style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 40 }} />
+            )}
+
+            {/* Mobile sidebar drawer */}
+            <aside style={{
+                position: "fixed", top: 0, left: 0, bottom: 0, width: 260,
+                background: "var(--bg)", borderRight: "1px solid var(--border)",
+                padding: "1.5rem 1.25rem", display: "flex", flexDirection: "column", gap: ".25rem",
+                zIndex: 50, transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)",
+                transition: "transform .3s ease", overflowY: "auto",
+            }}
+                className="mobile-sidebar">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".5rem" }}>
+                    <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", fontWeight: 700 }}>
+                        Dev<span style={{ color: "var(--accent)" }}>Keep</span>
+                    </span>
+                    <button onClick={() => setSidebarOpen(false)}
+                        style={{ background: "none", border: "none", cursor: "pointer", color: "var(--accent)", fontSize: "1.2rem" }}>×</button>
+                </div>
+                <SidebarContent />
+            </aside>
+
             {/* Body */}
-            <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "220px 1fr" }}>
+            <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "220px 1fr" }}
+                className="dashboard-grid">
 
-                {/* Sidebar */}
-                <aside style={{ borderRight: "1px solid var(--border)", padding: "1.5rem 1.25rem", display: "flex", flexDirection: "column", gap: ".25rem", minHeight: "calc(100vh - 73px)", position: "sticky", top: 73, alignSelf: "start" }}>
-
-                    {eyebrow("library")}
-                    {sidebarBtn("all snippets", "all", () => { setSidebarFilter("all"); setPublicFilter("all"); setLangFilter(""); setTagFilter(""); })}
-                    {sidebarBtn("public", "public", () => { setSidebarFilter("public"); setPublicFilter("public"); setLangFilter(""); setTagFilter(""); })}
-                    {sidebarBtn("private", "private", () => { setSidebarFilter("private"); setPublicFilter("private"); setLangFilter(""); setTagFilter(""); })}
-
-                    <div style={{ height: 1, background: "var(--border)", margin: ".75rem 0" }} />
-                    {eyebrow("languages")}
-                    {LANGUAGES.slice(0, 6).map(l =>
-                        sidebarBtn(l.label.toLowerCase(), `lang-${l.value}`, () => {
-                            setSidebarFilter(`lang-${l.value}`);
-                            setLangFilter(l.value);
-                            setPublicFilter("all");
-                            setTagFilter("");
-                        })
-                    )}
-
-                    <div style={{ height: 1, background: "var(--border)", margin: ".75rem 0" }} />
-                    {eyebrow("tags")}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
-                        {SUGGESTED_TAGS.slice(0, 8).map(t => (
-                            <button key={t}
-                                onClick={() => {
-                                    const next = tagFilter === t ? "" : t;
-                                    setTagFilter(next);
-                                    setSidebarFilter(next ? `tag-${t}` : "all");
-                                }}
-                                style={{
-                                    fontSize: ".6rem", padding: "3px 10px", borderRadius: 999,
-                                    cursor: "pointer", fontFamily: "'IBM Plex Mono', monospace",
-                                    transition: "all .15s", margin: 2,
-                                    background: tagFilter === t ? "var(--accent)" : "transparent",
-                                    color: tagFilter === t ? "var(--bg)" : "var(--accent)",
-                                    border: `1px solid ${tagFilter === t ? "var(--accent)" : "var(--border)"}`,
-                                }}>
-                                #{t}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* User info at bottom */}
-                    <div style={{ marginTop: "auto", paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
-                        <div style={{ fontSize: ".65rem", color: "var(--accent)", opacity: .7, marginBottom: ".5rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {session.user?.email}
-                        </div>
-                        <button onClick={handleLogout}
-                            style={{ width: "100%", padding: ".5rem .75rem", background: "transparent", border: "1px solid var(--border)", borderRadius: 4, cursor: "pointer", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".7rem", color: "var(--accent)", letterSpacing: ".06em", transition: "all .15s", textAlign: "left" }}
-                            onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--accent)"; }}
-                            onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; }}>
-                            sign out
-                        </button>
-                    </div>
+                {/* Desktop sidebar */}
+                <aside style={{ borderRight: "1px solid var(--border)", padding: "1.5rem 1.25rem", display: "flex", flexDirection: "column", gap: ".25rem", minHeight: "calc(100vh - 73px)", position: "sticky", top: 73, alignSelf: "start" }}
+                    className="desktop-sidebar">
+                    <SidebarContent />
                 </aside>
 
                 {/* Main */}
-                <main style={{ padding: "1.75rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                <main style={{ padding: "1.25rem", display: "flex", flexDirection: "column", gap: "1.25rem", minWidth: 0 }}>
+
+                    {/* Mobile top bar */}
+                    <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }} className="mobile-topbar">
+                        <button onClick={() => setSidebarOpen(true)}
+                            style={{ padding: ".5rem", background: "var(--card)", border: "1px solid var(--border)", borderRadius: 5, cursor: "pointer", color: "var(--accent)", display: "flex", alignItems: "center" }}
+                            className="menu-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+                            </svg>
+                        </button>
+                        <Link href="/create"
+                            style={{ marginLeft: "auto", padding: ".5rem 1rem", background: "var(--text)", color: "var(--bg)", borderRadius: 4, fontSize: ".7rem", letterSpacing: ".08em", textDecoration: "none", fontFamily: "'IBM Plex Mono', monospace" }}
+                            className="mobile-create-btn">
+                            + new snippet
+                        </Link>
+                    </div>
 
                     {/* Search row */}
-                    <div style={{ display: "flex", gap: ".75rem", alignItems: "center" }}>
-                        <div style={{ position: "relative", flex: 1 }}>
+                    <div style={{ display: "flex", gap: ".75rem", alignItems: "center", flexWrap: "wrap" }}>
+                        <div style={{ position: "relative", flex: 1, minWidth: 180 }}>
                             <svg style={{ position: "absolute", left: ".75rem", top: "50%", transform: "translateY(-50%)", width: 14, height: 14, color: "var(--accent)", opacity: .6 }}
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <circle cx="11" cy="11" r="7" /><line x1="16" y1="16" x2="22" y2="22" />
                             </svg>
-                            <input
-                                value={search}
-                                onChange={e => setSearch(e.target.value)}
-                                placeholder="search snippets by title, tag, language..."
-                                style={{ width: "100%", padding: ".6rem .75rem .6rem 2.25rem", border: "1px solid var(--border)", borderRadius: 5, background: "var(--card)", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".72rem", color: "var(--text)", outline: "none", letterSpacing: ".03em" }}
+                            <input value={search} onChange={e => setSearch(e.target.value)}
+                                placeholder="search snippets..."
+                                style={{ width: "100%", padding: ".6rem .75rem .6rem 2.25rem", border: "1px solid var(--border)", borderRadius: 5, background: "var(--card)", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".72rem", color: "var(--text)", outline: "none" }}
                                 onFocus={e => e.target.style.borderColor = "var(--accent)"}
                                 onBlur={e => e.target.style.borderColor = "var(--border)"}
                             />
                         </div>
                         <select value={sort} onChange={e => setSort(e.target.value)}
-                            style={{ padding: ".6rem .9rem", border: "1px solid var(--border)", borderRadius: 5, background: "var(--card)", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".7rem", color: "var(--accent)", outline: "none", cursor: "pointer" }}>
-                            <option value="newest">newest first</option>
-                            <option value="oldest">oldest first</option>
+                            style={{ padding: ".6rem .75rem", border: "1px solid var(--border)", borderRadius: 5, background: "var(--card)", fontFamily: "'IBM Plex Mono', monospace", fontSize: ".7rem", color: "var(--accent)", outline: "none", cursor: "pointer" }}>
+                            <option value="newest">newest</option>
+                            <option value="oldest">oldest</option>
                             <option value="az">a → z</option>
                         </select>
                         <div style={{ display: "flex", border: "1px solid var(--border)", borderRadius: 5, overflow: "hidden" }}>
                             {["grid", "list"].map(v => (
                                 <button key={v} onClick={() => setView(v)}
-                                    style={{ padding: ".55rem .75rem", background: view === v ? "var(--text)" : "transparent", border: "none", cursor: "pointer", color: view === v ? "var(--bg)" : "var(--accent)", transition: "background .15s", fontSize: ".75rem" }}>
+                                    style={{ padding: ".55rem .65rem", background: view === v ? "var(--text)" : "transparent", border: "none", cursor: "pointer", color: view === v ? "var(--bg)" : "var(--accent)", fontSize: ".75rem" }}>
                                     {v === "grid" ? "⊞" : "☰"}
                                 </button>
                             ))}
@@ -367,14 +412,14 @@ export default function Dashboard() {
                     {/* Stats strip */}
                     <div style={{ display: "flex", gap: "1px", background: "var(--border)", border: "1px solid var(--border)", borderRadius: 7, overflow: "hidden" }}>
                         {[
-                            { n: snippets.length, l: "total snippets" },
-                            { n: [...new Set(snippets.map(s => s.language))].length, l: "languages" },
+                            { n: snippets.length, l: "snippets" },
+                            { n: [...new Set(snippets.map(s => s.language).filter(Boolean))].length, l: "languages" },
                             { n: snippets.filter(s => s.isPublic).length, l: "public" },
-                            { n: [...new Set(snippets.flatMap(s => s.tags || []))].length, l: "tags used" },
+                            { n: [...new Set(snippets.flatMap(s => s.tags || []))].length, l: "tags" },
                         ].map(({ n, l }) => (
-                            <div key={l} style={{ flex: 1, background: "var(--card)", padding: ".9rem 1rem", textAlign: "center" }}>
-                                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: "var(--text)" }}>{n}</div>
-                                <div style={{ fontSize: ".58rem", letterSpacing: ".12em", color: "var(--accent)", opacity: .75, marginTop: ".1rem" }}>{l}</div>
+                            <div key={l} style={{ flex: 1, background: "var(--card)", padding: ".75rem .5rem", textAlign: "center" }}>
+                                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: "var(--text)" }}>{n}</div>
+                                <div style={{ fontSize: ".55rem", letterSpacing: ".1em", color: "var(--accent)", opacity: .75 }}>{l}</div>
                             </div>
                         ))}
                     </div>
@@ -383,18 +428,19 @@ export default function Dashboard() {
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: ".6rem", fontSize: ".65rem", letterSpacing: ".14em", color: "var(--accent)" }}>
                             <span style={{ display: "inline-block", width: 20, height: 1, background: "var(--accent)" }} />
-                            {tagFilter ? `#${tagFilter}` : langFilter ? `${langFilter} snippets` : `${publicFilter === "all" ? "all" : publicFilter} snippets`}
+                            {tagFilter ? `#${tagFilter}` : langFilter ? `${langFilter}` : publicFilter === "all" ? "all snippets" : `${publicFilter} snippets`}
                         </div>
                         <span style={{ fontSize: ".65rem", color: "var(--accent)", opacity: .6 }}>
                             {filtered.length} result{filtered.length !== 1 ? "s" : ""}
                         </span>
                     </div>
 
-                    {/* Error state */}
+                    {/* Error */}
                     {fetchError && (
                         <div style={{ padding: "1rem", border: "1px solid #e06c75", borderRadius: 7, background: "rgba(224,108,117,.06)", fontSize: ".72rem", color: "#e06c75" }}>
-                            could not load snippets: {fetchError}
-                            <button onClick={() => window.location.reload()} style={{ marginLeft: "1rem", textDecoration: "underline", background: "none", border: "none", cursor: "pointer", color: "#e06c75", fontFamily: "inherit", fontSize: "inherit" }}>
+                            {fetchError}
+                            <button onClick={() => window.location.reload()}
+                                style={{ marginLeft: "1rem", textDecoration: "underline", background: "none", border: "none", cursor: "pointer", color: "#e06c75", fontFamily: "inherit", fontSize: "inherit" }}>
                                 retry
                             </button>
                         </div>
@@ -402,11 +448,11 @@ export default function Dashboard() {
 
                     {/* Cards */}
                     {loading ? (
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "1rem" }}>
                             {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
                         </div>
                     ) : filtered.length === 0 ? (
-                        <div style={{ textAlign: "center", padding: "5rem 2rem", color: "var(--accent)", opacity: .6 }}>
+                        <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--accent)", opacity: .6 }}>
                             <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", marginBottom: ".5rem" }}>
                                 {snippets.length === 0 ? "your vault is empty" : "no snippets found"}
                             </div>
@@ -419,12 +465,12 @@ export default function Dashboard() {
                     ) : (
                         <div style={{
                             display: view === "grid" ? "grid" : "flex",
-                            gridTemplateColumns: view === "grid" ? "repeat(auto-fill, minmax(280px, 1fr))" : undefined,
+                            gridTemplateColumns: view === "grid" ? "repeat(auto-fill, minmax(260px, 1fr))" : undefined,
                             flexDirection: view === "list" ? "column" : undefined,
                             gap: "1rem",
                         }}>
                             {filtered.map((s, i) => (
-                                <SnippetCard key={s._id} snippet={s} view={view} onCopy={showToast} onDelete={handleDelete} index={i} />
+                                <SnippetCard key={s._id} snippet={s} onCopy={showToast} onDelete={handleDelete} index={i} />
                             ))}
                         </div>
                     )}
@@ -432,19 +478,26 @@ export default function Dashboard() {
             </div>
 
             {/* Toast */}
-            <div style={{
-                position: "fixed", bottom: "1.5rem", right: "1.5rem",
-                background: "var(--text)", color: "var(--bg)",
-                padding: ".6rem 1.25rem", borderRadius: 5, fontSize: ".7rem",
-                letterSpacing: ".06em", zIndex: 999,
-                opacity: toast ? 1 : 0, transition: "opacity .3s", pointerEvents: "none",
-            }}>
+            <div style={{ position: "fixed", bottom: "1.5rem", right: "1.5rem", background: "var(--text)", color: "var(--bg)", padding: ".6rem 1.25rem", borderRadius: 5, fontSize: ".7rem", letterSpacing: ".06em", zIndex: 999, opacity: toast ? 1 : 0, transition: "opacity .3s", pointerEvents: "none" }}>
                 copied to clipboard
             </div>
 
             <style>{`
         @keyframes draw { to { stroke-dashoffset: 0; } }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+ 
+        /* Desktop: show sidebar, hide mobile elements */
+        .desktop-sidebar { display: flex !important; }
+        .mobile-topbar { display: none !important; }
+        .dashboard-grid { grid-template-columns: 220px 1fr !important; }
+ 
+        /* Mobile: hide desktop sidebar, show mobile elements */
+        @media (max-width: 768px) {
+          .desktop-sidebar { display: none !important; }
+          .mobile-topbar { display: flex !important; }
+          .dashboard-grid { grid-template-columns: 1fr !important; }
+          .mobile-sidebar { display: flex !important; }
+        }
       `}</style>
         </div>
     );

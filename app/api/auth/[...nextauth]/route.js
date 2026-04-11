@@ -5,13 +5,13 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/core/db";
 import User from "@/models/user";
 
-const handler = NextAuth({
+export const authOptions = {
     providers: [
-        //googgle o auth
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
+
 
         //email & pass
         CredentialsProvider({
@@ -60,11 +60,19 @@ const handler = NextAuth({
 
         // Put user id into the JWT token
         async jwt({ token, user }) {
-            if (user) {
+            // Credentials login: user.id is directly available
+            if (user?.id) {
+                token.userId = user.id;
+                return token;
+            }
+
+            // Google login or token refresh: fetch from DB once
+            if (!token.userId && token.email) {
                 await connectDB();
                 const dbUser = await User.findOne({ email: token.email });
                 if (dbUser) token.userId = dbUser._id.toString();
             }
+
             return token;
         },
 
@@ -76,12 +84,13 @@ const handler = NextAuth({
     },
 
     pages: {
-        signIn: "/login",      // redirect here instead of NextAuth default page
-        error: "/login",       // auth errors go back to login page
+        signIn: "/login",
+        error: "/login",
     },
 
     session: { strategy: "jwt" },
     secret: process.env.NEXTAUTH_SECRET,
-});
+};
 
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

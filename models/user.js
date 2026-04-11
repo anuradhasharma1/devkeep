@@ -16,8 +16,9 @@ const UserSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            required: true,
-            default: null,  //null for google users
+            required: false,  // ← false — Google users have no password
+            default: null,
+            select: false,    // ← never return password in queries by default
         },
         avatar: {
             type: String,

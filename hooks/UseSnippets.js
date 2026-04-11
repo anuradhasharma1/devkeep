@@ -1,72 +1,75 @@
 "use client";
-
 import { useState, useEffect } from "react";
-
-const STORAGE_KEY = "devkeep_snippets";
 
 export function useSnippets() {
   const [snippets, setSnippets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // load snippets
-  useEffect(() => {
+  const fetchSnippets = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setSnippets(JSON.parse(stored));
-      }
+      const res = await fetch("/api/snippets", { credentials: "include" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch");
+      setSnippets(data.snippets || []);
     } catch (err) {
-      console.error("Snippet load error:", err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchSnippets();
   }, []);
 
-  // helper
-  const persist = (data) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const addSnippet = async (snippetData) => {
+    const res = await fetch("/api/snippets", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(snippetData),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to create");
+    setSnippets(prev => [data.snippet, ...prev]);
+    return data.snippet;
   };
 
-  // create
-  const addSnippet = (snippet) => {
-    const newSnippet = {
-      ...snippet,
-      _id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-    };
-
-    const updated = [newSnippet, ...snippets];
-    setSnippets(updated);
-    persist(updated);
-
-    return newSnippet;
+  const deleteSnippet = async (id) => {
+    const res = await fetch(`/api/snippets/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || "Failed to delete");
+    }
+    setSnippets(prev => prev.filter(s => s._id !== id));
   };
 
-  // delete
-  const deleteSnippet = (id) => {
-    const updated = snippets.filter((s) => s._id !== id);
-    setSnippets(updated);
-    persist(updated);
+  const updateSnippet = async (id, newData) => {
+    const res = await fetch(`/api/snippets/${id}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newData),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to update");
+    setSnippets(prev => prev.map(s => s._id === id ? data.snippet : s));
+    return data.snippet;
   };
 
-  // update
-  const updateSnippet = (id, newData) => {
-    const updated = snippets.map((s) =>
-      s._id === id ? { ...s, ...newData } : s
-    );
-
-    setSnippets(updated);
-    persist(updated);
-  };
-
-  // get one (useful later)
-  const getSnippet = (id) => {
-    return snippets.find((s) => s._id === id);
-  };
+  const getSnippet = (id) => snippets.find(s => s._id === id);
 
   return {
     snippets,
     loading,
+    error,
+    refetch: fetchSnippets,
     addSnippet,
     deleteSnippet,
     updateSnippet,
