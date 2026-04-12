@@ -9,6 +9,7 @@ import { copyToClipboard } from "@/utils/copyToclipboard";
 import { formatDate } from "@/utils/formatDate";
 import { LANGUAGES } from "@/constants/languages";
 import { SUGGESTED_TAGS } from "@/constants/tags";
+import ThemeToggle from "@/components/ThemeToggler";
 
 const fadeUp = (delay = 0) => ({
     initial: { opacity: 0, y: 16 },
@@ -364,19 +365,92 @@ export default function Dashboard() {
                 <main style={{ padding: "1.25rem", display: "flex", flexDirection: "column", gap: "1.25rem", minWidth: 0 }}>
 
                     {/* Mobile top bar */}
-                    <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }} className="mobile-topbar">
-                        <button onClick={() => setSidebarOpen(true)}
-                            style={{ padding: ".5rem", background: "var(--card)", border: "1px solid var(--border)", borderRadius: 5, cursor: "pointer", color: "var(--accent)", display: "flex", alignItems: "center" }}
-                            className="menu-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
-                            </svg>
-                        </button>
-                        <Link href="/create"
-                            style={{ marginLeft: "auto", padding: ".5rem 1rem", background: "var(--text)", color: "var(--bg)", borderRadius: 4, fontSize: ".7rem", letterSpacing: ".08em", textDecoration: "none", fontFamily: "'IBM Plex Mono', monospace" }}
-                            className="mobile-create-btn">
-                            + new snippet
-                        </Link>
+                    <div className="mobile-topbar" style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: ".5rem",
+                    }}>
+
+                        {/* LEFT: menu + logo */}
+                        <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
+
+                            {/* menu */}
+                            <button onClick={() => setSidebarOpen(true)}
+                                style={{
+                                    padding: ".45rem",
+                                    background: "var(--card)",
+                                    border: "1px solid var(--border)",
+                                    borderRadius: 5,
+                                    cursor: "pointer",
+                                    color: "var(--accent)",
+                                    display: "flex",
+                                }}>
+                                ☰
+                            </button>
+
+                            {/* logo (smaller) */}
+                            <span style={{
+                                fontFamily: "'Playfair Display', serif",
+                                fontSize: ".9rem",
+                                fontWeight: 700
+                            }}>
+                                Dev<span style={{ color: "var(--accent)" }}>Keep</span>
+                            </span>
+                        </div>
+
+                        {/* RIGHT SIDE */}
+                        <div style={{ display: "flex", alignItems: "center", gap: ".6rem" }}>
+
+                            {/* + button */}
+                            <Link href="/create" title="add snippet"
+                                style={{
+                                    width: 32,
+                                    height: 32,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    borderRadius: "50%",
+                                    border: "1px solid var(--border)",
+                                    background: "var(--card)",
+                                    color: "var(--accent)",
+                                    textDecoration: "none",
+                                    fontSize: "1.2rem",
+                                }}>
+                                +
+                            </Link>
+
+                            {/* theme toggle */}
+                            <div style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                border: "1px solid var(--border)",
+                                background: "var(--card)",
+                                color: "var(--accent)",
+                                cursor: "pointer"
+                            }}>
+                                <ThemeToggle/>
+                            </div>
+
+                            {/* profile */}
+                            <button onClick={handleLogout}
+                                style={{
+                                    width: 32,
+                                    height: 32,
+                                    borderRadius: "50%",
+                                    border: "1px solid var(--border)",
+                                    background: "var(--card)",
+                                    color: "var(--accent)",
+                                    cursor: "pointer",
+                                    fontSize: ".7rem"
+                                }}
+                                title="sign out"
+                            >
+                                ⎋
+                            </button>
+
+                        </div>
                     </div>
 
                     {/* Search row */}
