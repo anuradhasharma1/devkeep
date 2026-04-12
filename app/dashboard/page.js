@@ -426,7 +426,6 @@ export default function Dashboard() {
                                 height: 32,
                                 borderRadius: "50%",
                                 border: "1px solid var(--border)",
-                                background: "var(--card)",
                                 color: "var(--accent)",
                                 cursor: "pointer"
                             }}>
