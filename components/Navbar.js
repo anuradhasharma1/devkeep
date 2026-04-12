@@ -16,12 +16,13 @@ const fadeUp = (delay = 0) => ({
 export default function Navbar() {
     const { user, logout } = useAuth();
     const pathname = usePathname();
-    if (pathname.startsWith("/dashboard")) return null;
+
 
     return (
 
         <motion.nav {...fadeUp(0.05)}
-            className="relative z-10 flex items-center justify-between px-8 py-5"
+            className={`relative z-10 flex items-center justify-between px-8 py-5 
+  ${pathname.startsWith("/dashboard") ? "hidden md:flex" : "flex"}`}
             style={{ borderBottom: "1px solid var(--border)" }}>
             <Link href="/">
                 <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700 }}>
