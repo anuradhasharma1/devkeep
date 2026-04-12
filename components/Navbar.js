@@ -69,10 +69,10 @@ export default function Navbar() {
                         sign in
                     </Link>
                 )}
-
-                {/* DASHBOARD */}
+                {/*dashboard*/}
                 {pathname === "/dashboard" && (
-                    <>
+                    <div className="hidden md:flex items-center gap-2">
+
                         <Link
                             href="/create"
                             className="text-xs px-4 py-1.5 rounded tracking-widest transition-all hover:opacity-80"
@@ -113,7 +113,8 @@ export default function Navbar() {
                         >
                             {user?.name?.slice(0, 2).toUpperCase() || "AS"}
                         </div>
-                    </>
+
+                    </div>
                 )}
 
                 {/* CREATE */}
