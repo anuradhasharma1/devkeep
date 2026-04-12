@@ -257,7 +257,7 @@ export default function Home() {
             <p className="relative text-xs mx-auto mb-8" style={{ opacity: .7, lineHeight: 1.85, maxWidth: "40ch" }}>
               Free to use. No credit card. Just a calmer way to manage your code.
             </p>
-            <button onClick={goToDashboard} className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90"
+            <button onClick={goToDashboard} className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90 cursor-pointer"
               style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "inherit" }}>
               get started for Free
             </button>
