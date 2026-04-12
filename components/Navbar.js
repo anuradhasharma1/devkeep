@@ -16,6 +16,8 @@ const fadeUp = (delay = 0) => ({
 export default function Navbar() {
     const { user, logout } = useAuth();
     const pathname = usePathname();
+    if (pathname.startsWith("/dashboard")) return null;
+
     return (
 
         <motion.nav {...fadeUp(0.05)}
@@ -68,53 +70,6 @@ export default function Navbar() {
                         style={{ border: "1px solid var(--accent)", color: "var(--accent)", fontFamily: "inherit" }}>
                         sign in
                     </Link>
-                )}
-                {/*dashboard*/}
-                {pathname === "/dashboard" && (
-                    <div className="hidden md:flex items-center gap-2">
-
-                        <Link
-                            href="/create"
-                            className="text-xs px-4 py-1.5 rounded tracking-widest transition-all hover:opacity-80"
-                            style={{
-                                background: "var(--text)",
-                                color: "var(--bg)",
-                            }}
-                        >
-                            + new snippet
-                        </Link>
-
-                        <button
-                            onClick={logout}
-                            className="text-xs px-3 py-1.5 rounded tracking-widest cursor-pointer"
-                            style={{
-                                border: "1px solid var(--border)",
-                                color: "var(--accent)",
-                                background: "transparent",
-                            }}
-                        >
-                            sign out
-                        </button>
-
-                        {/* avatar */}
-                        <div
-                            style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: "50%",
-                                background: "var(--accent)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: ".65rem",
-                                color: "var(--bg)",
-                                fontWeight: 500,
-                            }}
-                        >
-                            {user?.name?.slice(0, 2).toUpperCase() || "AS"}
-                        </div>
-
-                    </div>
                 )}
 
                 {/* CREATE */}
