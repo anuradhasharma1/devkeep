@@ -312,10 +312,10 @@ export default function EditPage() {
       <svg style={{ position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0, opacity: .1 }}
         viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice">
         <style>{`.gl{stroke:var(--accent);stroke-width:.5;fill:none;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.5s ease forwards}@keyframes draw{to{stroke-dashoffset:0}}`}</style>
-        {[[0,175,1000,175,.1],[0,350,1000,350,.25],[0,525,1000,525,.4],[200,0,200,700,.55],[500,0,500,700,.7],[800,0,800,700,.85]]
-          .map(([x1,y1,x2,y2,d],i) => <line key={i} className="gl" x1={x1} y1={y1} x2={x2} y2={y2} style={{animationDelay:`${d}s`}}/>)}
+        {[[0, 175, 1000, 175, .1], [0, 350, 1000, 350, .25], [0, 525, 1000, 525, .4], [200, 0, 200, 700, .55], [500, 0, 500, 700, .7], [800, 0, 800, 700, .85]]
+          .map(([x1, y1, x2, y2, d], i) => <line key={i} className="gl" x1={x1} y1={y1} x2={x2} y2={y2} style={{ animationDelay: `${d}s` }} />)}
         <circle cx="500" cy="350" r="200" fill="var(--accent)" fillOpacity=".06" stroke="var(--accent)" strokeWidth=".5"
-          style={{strokeDasharray:1260,strokeDashoffset:1260,animation:"draw 3s 1s ease forwards"}}/>
+          style={{ strokeDasharray: 1260, strokeDashoffset: 1260, animation: "draw 3s 1s ease forwards" }} />
       </svg>
 
       {/* Topbar — handled by Navbar, just show save indicator */}
@@ -327,7 +327,14 @@ export default function EditPage() {
       </div>
 
       {/* Body */}
-      <div style={{ position: "relative", zIndex: 1, maxWidth: 1100, margin: "0 auto", padding: "2rem 1.75rem", display: "grid", gridTemplateColumns: "1fr 340px", gap: "2rem", alignItems: "start" }}>
+      <div className="edit-grid" style={{
+        position: "relative",
+        zIndex: 1,
+        maxWidth: 1100,
+        margin: "0 auto",
+        padding: "2rem 1.25rem",
+        alignItems: "start"
+      }}>
 
         {/* ── LEFT: Form ── */}
         <form onSubmit={handleSubmit}>
@@ -460,7 +467,13 @@ export default function EditPage() {
         </form>
 
         {/* ── RIGHT: Preview + Tips ── */}
-        <div style={{ position: "sticky", top: 70, display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        <div style={{
+          position: "relative",
+          top: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1.25rem"
+        }}>
           <motion.div {...fadeUp(0.2)}>
             <div style={{ display: "flex", alignItems: "center", gap: ".6rem", fontSize: ".62rem", letterSpacing: ".18em", color: "var(--accent)", marginBottom: ".75rem" }}>
               <span style={{ display: "inline-block", width: 20, height: 1, background: "var(--accent)" }} />
@@ -504,6 +517,22 @@ export default function EditPage() {
         @keyframes draw { to { stroke-dashoffset: 0; } }
         input::placeholder, textarea::placeholder { color: var(--accent); opacity: .45; }
         select option { background: var(--card); color: var(--text); }
+
+        @media (min-width: 768px) {
+    .edit-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .edit-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  }
       `}</style>
     </div>
   );
