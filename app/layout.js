@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Devkeep",
-  description: "That one snippet you’ll need later? It’s here",
+  title: "Devkeep — Code Snippet Manager for Developers",
+  description: "Save, tag, and find your code snippets instantly. Built for developers",
 };
 
 export default function RootLayout({ children }) {
