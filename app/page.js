@@ -34,7 +34,7 @@ function useCountUp(ref, target, duration = 1200, startDelay = 800) {
 }
 
 export default function Home() {
-  const { isAuthenticated,loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
 
   const goToDashboard = () => {
@@ -60,7 +60,7 @@ export default function Home() {
         {/* Animated grid background */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0"
           viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice"
-          style={{ opacity: 0.25 }}>
+          style={{ opacity: 0.08 }}>
           <style>{`
           .gl { stroke: var(--accent); stroke-width: 0.5; fill: none; }
           .gl-draw { stroke-dasharray: 1; stroke-dashoffset: 1;
@@ -108,9 +108,9 @@ export default function Home() {
             <motion.h1 {...fadeUp(0.2)}
               className="leading-tight mb-5"
               style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.4rem,5vw,3.8rem)", fontWeight: 700, lineHeight: 1.08 }}>
-              Your cozy<br />
-              <em style={{ color: "var(--accent)", fontStyle: "italic" }}>code vault</em><br />
-              lives here.
+              Save & find your<br />
+              <em style={{ color: "var(--accent)", fontStyle: "italic" }}>code snippets</em><br />
+              instantly.
             </motion.h1>
 
             <motion.p {...fadeUp(0.35)}
@@ -121,12 +121,12 @@ export default function Home() {
 
             <motion.div {...fadeUp(0.5)} className="flex gap-3 flex-wrap">
               <button onClick={goToDashboard}
-                className="px-6 py-2.5 text-xs tracking-widest rounded-sm transition-all hover:opacity-80"
+                className="px-6 py-2.5 text-xs tracking-widest rounded-sm transition-all hover:opacity-80 cursor-pointer"
                 style={{ background: "var(--text)", color: "var(--bg)", fontFamily: "inherit" }}>
                 open dashboard
               </button>
               <button onClick={goToCreate}
-                className="px-6 py-2.5 text-xs tracking-widest rounded-sm transition-all"
+                className="px-6 py-2.5 text-xs tracking-widest rounded-sm transition-all cursor-pointer"
                 style={{ border: "1px solid var(--border)", color: "var(--text)", fontFamily: "inherit" }}>
                 create snippet
               </button>
@@ -247,25 +247,25 @@ export default function Home() {
         {/* ── CTA ── */}
         <section className="px-8 pb-20 max-w-4xl mx-auto">
           <div className="relative overflow-hidden rounded-xl text-center py-16 px-8"
-            style={{ background: "var(--text)", color: "var(--bg)" }}>
+            style={{ background: "#5C3412", color: "#FAF7F2" }}>
             <div className="absolute rounded-full" style={{ width: 220, height: 220, background: "var(--accent)", opacity: .12, top: -60, right: -50 }} />
-            <div className="absolute rounded-full" style={{ width: 130, height: 130, background: "var(--accent)", opacity: .10, bottom: -40, left: 30 }} />
-            <h2 className="relative" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 700, marginBottom: "1rem" }}>
-              Start saving your<br />
-              <em style={{ fontStyle: "italic", color: "#c8a98d" }}>best snippets</em> today.
-            </h2>
-            <p className="relative text-xs mx-auto mb-8" style={{ opacity: .7, lineHeight: 1.85, maxWidth: "40ch" }}>
-              Free to use. No credit card. Just a calmer way to manage your code.
-            </p>
-            <button onClick={goToDashboard} className="relative inline-block px-8 py-3 text-xs tracking-widest rounded transition-all hover:opacity-90 cursor-pointer"
-              style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "inherit" }}>
-              get started for Free
-            </button>
-          </div>
-        </section>
-        <ScrollToTop />
+          <div className="absolute rounded-full" style={{ width: 130, height: 130, background: "var(--accent)", opacity: .10, bottom: -40, left: 30 }} />
+          <h2 className="relative" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem,3.5vw,2.8rem)", fontWeight: 700, marginBottom: "1rem" }}>
+            Start saving your<br />
+            <em style={{ fontStyle: "italic", color: "#c8a98d" }}>best snippets</em> today.
+          </h2>
+          <p className="relative text-xs mx-auto mb-8" style={{ opacity: .7, lineHeight: 1.85, maxWidth: "40ch" }}>
+            Free to use. No credit card. Just a calmer way to manage your code.
+          </p>
+          <button onClick={goToDashboard} className="relative inline-block  text-xs tracking-widest rounded transition-all hover:opacity-90 cursor-pointer"
+            style={{ background: "var(--bg)", color: "var(--text)", fontFamily: "inherit" ,padding: "12px 28px",fontSize: ".85rem", fontWeight: 600}}>
+            get started for Free
+          </button>
+      </div>
+    </section >
+      <ScrollToTop />
 
-        {/* ── FOOTER ── */}
+  {/* ── FOOTER ── */ }
         <footer
           id="contact"
           className="flex flex-col items-center justify-center gap-4 px-8 py-10 text-xs tracking-widest text-center"
@@ -331,7 +331,7 @@ export default function Home() {
         @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes draw { to { stroke-dashoffset: 0; } }
       `}</style>
-      </div>
+      </div >
     </>
   );
 }
